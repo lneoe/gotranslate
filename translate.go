@@ -39,14 +39,6 @@ func (g *GoTransClient) ApiUrlToString() string {
     return g.TranslateAPIUrl.String()
 }
 
-func (g *GoTransClient) NewApiUrl() {
-    apiUrl := url.URL{}
-    apiUrl.Scheme = "http"
-    apiUrl.Host = "translate.google.com"
-    apiUrl.Path = "translate_a/t"
-    // return &apiUrl
-}
-
 func (g *GoTransClient) GetTranslateResp(sl, tl, text string) []byte {
     // sl := "en"
     // tl := "zh-CN"
@@ -61,14 +53,6 @@ func (g *GoTransClient) GetTranslateResp(sl, tl, text string) []byte {
     resp, _ := client.Do(req)
     body, _ := ioutil.ReadAll(resp.Body)
     return body
-}
-
-func NewApiUrl() *url.URL {
-    apiUrl := url.URL{}
-    apiUrl.Scheme = "http"
-    apiUrl.Host = "translate.google.com"
-    apiUrl.Path = "translate_a/t"
-    return &apiUrl
 }
 
 type sentences struct {
