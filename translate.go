@@ -52,14 +52,12 @@ func (g *GoTransClient) GetTranslateResp(sl, tl, text string) []byte {
     // tl := "zh-CN"
     // text := "test"
 
-    client := &http.Client{}
-
-    fmt.Println("text: ", text)
     g.BuildUrlParams(sl, tl, text)
     urlStr := g.ApiUrlToString()
 
     req, _ := http.NewRequest("GET", urlStr, nil)
     req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64)")
+    client := &http.Client{}
     resp, _ := client.Do(req)
     body, _ := ioutil.ReadAll(resp.Body)
     return body
@@ -131,7 +129,6 @@ func main() {
     flag.StringVar(&tl, "t", "zh-CN", "target_language") //target_language
     flag.Parse()
     text := strings.Join(flag.Args(), " ")
-    fmt.Println(sl, tl)
     g := GoTransClient{}
     b := g.GetTranslateResp(sl, tl, text)
     PrettyResponse(b)
