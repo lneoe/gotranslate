@@ -39,7 +39,7 @@ func (g *GoTransClient) ApiUrlToString() string {
     return g.TranslateAPIUrl.String()
 }
 
-func (g *GoTransClient) GetTranslateResp(sl, tl, text string) []byte {
+func (g *GoTransClient) GetTranslateResp(sl, tl, text string) (b []byte, err error) {
     // sl := "en"
     // tl := "zh-CN"
     // text := "test"
@@ -50,9 +50,20 @@ func (g *GoTransClient) GetTranslateResp(sl, tl, text string) []byte {
     req, _ := http.NewRequest("GET", urlStr, nil)
     req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64)")
     client := &http.Client{}
-    resp, _ := client.Do(req)
-    body, _ := ioutil.ReadAll(resp.Body)
-    return body
+    resp, err := client.Do(req)
+    if err != nil {
+        // fmt.Printf("Error: %v\n", err)
+        return nil, err
+    } else {
+        // body, err := ioutil.ReadAll(resp.Body)
+        // if err != nil {
+        //     fmt.Printf("Error: %v\n", err)
+        //     return nil, err
+        // }
+        body, _ := ioutil.ReadAll(resp.Body)
+        return body, nil
+    }
+
 }
 
 type sentences struct {
@@ -114,6 +125,10 @@ func main() {
     flag.Parse()
     text := strings.Join(flag.Args(), " ")
     g := GoTransClient{}
-    b := g.GetTranslateResp(sl, tl, text)
-    PrettyResponse(b)
+    b, err := g.GetTranslateResp(sl, tl, text)
+    if err != nil {
+        fmt.Printf("Error: %v\n", err)
+    } else {
+        PrettyResponse(b)
+    }
 }
