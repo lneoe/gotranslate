@@ -14,6 +14,8 @@ HOWTO:
 3. Copy translate to /bin  
 `cp translate /usr/bin`  or `ln -s your_build_path/translate /usr/bin/translate`
 4. Enjoy yourself :)  
+
+
 ##Download the translate
 also you can download gotranslate  
 [Linux](http://goer.im/translate_Archlinux)
