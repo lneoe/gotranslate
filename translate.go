@@ -1,6 +1,7 @@
 package main
 
 import (
+    // "errors"
     "encoding/json"
     "flag"
     "fmt"
@@ -15,6 +16,10 @@ type GoTransClient struct {
     UrlValues       *url.Values
 }
 
+// build url parameter
+// 't' client will receiver non-standard json format
+// change client to something other than 't' to get standard json response
+// "client=p&ie=utf-8&oe=utf-8&sl=en&tl=zh-CN&text=test"
 func (g *GoTransClient) BuildUrlParams(sl, tl, text string) {
     val := url.Values{}
     val.Set("client", "p")
@@ -26,6 +31,8 @@ func (g *GoTransClient) BuildUrlParams(sl, tl, text string) {
     g.UrlValues = &val
 }
 
+// return the url string
+// http://translate.google.com/translate_a/t?client=p&ie=utf-8&oe=utf-8&sl=en&tl=zh-CN&text=test
 func (g *GoTransClient) ApiUrlToString() string {
     apiUrl := url.URL{}
     apiUrl.Scheme = "http"
@@ -39,6 +46,8 @@ func (g *GoTransClient) ApiUrlToString() string {
     return g.TranslateAPIUrl.String()
 }
 
+// get the translate result
+// return []byte
 func (g *GoTransClient) GetTranslateResp(sl, tl, text string) (b []byte, err error) {
     // sl := "en"
     // tl := "zh-CN"
@@ -120,15 +129,29 @@ func PrettyResponse(b []byte) {
 
 func main() {
     var sl, tl string
-    flag.StringVar(&sl, "f", "en", "source_language")    //source_language
-    flag.StringVar(&tl, "t", "zh-CN", "target_language") //target_language
+    var v, help bool
+    flag.StringVar(&sl, "f", "en", "source_language,default 'en'")       //source_language
+    flag.StringVar(&tl, "t", "zh-CN", "target_language,default 'zh-CN'") //target_language
+    flag.BoolVar(&v, "v", false, "reverse 'f' and 'v' options")          //reverse the "f" and "v"
+    flag.BoolVar(&help, "help", false, "for help")
     flag.Parse()
-    text := strings.Join(flag.Args(), " ")
-    g := GoTransClient{}
-    b, err := g.GetTranslateResp(sl, tl, text)
-    if err != nil {
-        fmt.Printf("Error: %v\n", err)
+    if help || len(flag.Args()) == 0 {
+        fmt.Println("Usage:\n  translate [-f <from language>] [-t <to language>] [-v] <data>")
+        flag.PrintDefaults()
+        fmt.Println("eg.\n  translate -f en -t zh-CN test\n  translate -v test")
     } else {
-        PrettyResponse(b)
+        text := strings.Join(flag.Args(), " ")
+        if v {
+            sl, tl = tl, sl
+        }
+
+        g := GoTransClient{}
+        b, err := g.GetTranslateResp(sl, tl, text)
+        if err != nil {
+            fmt.Printf("Error: %v\n", err)
+        } else {
+            PrettyResponse(b)
+        }
     }
+
 }
