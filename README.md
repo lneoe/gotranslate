@@ -16,6 +16,6 @@ HOWTO:
 4. Enjoy yourself :)  
 
 
-##Download the translate
-also you can download gotranslate  
+##Download gotranslate
+you can download gotranslate,and do step 3  
 [Linux](http://goer.im/translate_Archlinux)
