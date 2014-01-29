@@ -96,9 +96,18 @@ type entry struct {
     Score               float32  `json:"score"`
 }
 
+type spell struct {
+    Spell_html_res  string `json:"spell_html_res"`
+    Spell_res       string `json:"spell_res"`
+    Correction_type []int8 `json:"correction_type"`
+    Related         bool   `json:"related"`
+}
+
 type TranslateResult struct {
     Sentences []sentences `json:"sentences"`
     Dict      []dict      `json:"dict"`
+    Src       string      `json:"src"`
+    Spell     spell       `json:"spell"`
 }
 
 func PrettyResponse(b []byte) {
@@ -123,6 +132,9 @@ func PrettyResponse(b []byte) {
             e := d.Entry[j]
             fmt.Printf("\t%s\t%s\n", e.Word, strings.Join(e.Reverse_translation, ","))
         }
+    }
+    if tr.Spell.Spell_res != "" {
+        fmt.Println("Did you mean: %s", tr.Spell.Spell_res)
     }
 
 }
