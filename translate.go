@@ -134,7 +134,7 @@ func PrettyResponse(b []byte) {
         }
     }
     if tr.Spell.Spell_res != "" {
-        fmt.Println("Did you mean: %s", tr.Spell.Spell_res)
+        fmt.Printf("Did you mean: %s\n", tr.Spell.Spell_res)
     }
 
 }
