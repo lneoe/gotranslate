@@ -5,6 +5,7 @@ import (
     "encoding/json"
     "flag"
     "fmt"
+    "gotranslate/history"
     "io/ioutil"
     "net/http"
     "net/url"
@@ -120,6 +121,8 @@ func PrettyResponse(b []byte) {
     if len(tr.Dict) < 1 {
         for i := 0; i < len(tr.Sentences); i++ {
             fmt.Printf("[sentences]:\t%s\n", tr.Sentences[i].Trans)
+            //添加到history
+            historys().Add(fmt.Sprintf("[%s]:\t[%s]\n", tr.Sentences[i].Orig, tr.Sentences[i].Trans))
         }
     }
 
@@ -132,11 +135,22 @@ func PrettyResponse(b []byte) {
             e := d.Entry[j]
             fmt.Printf("\t%s\t%s\n", e.Word, strings.Join(e.Reverse_translation, ","))
         }
+        //添加到history
+        if i == 0 {
+            historys().Add(fmt.Sprintf("[%s]:\t%s\n", d.Base_form, d.Terms))
+        } else {
+            //第二行开始 不显示源单词
+            historys().Add(fmt.Sprintf("\t%s\n", d.Terms))
+        }
     }
     if tr.Spell.Spell_res != "" {
         fmt.Printf("Did you mean: %s\n", tr.Spell.Spell_res)
     }
 
+}
+
+func historys() *history.HistoryFile {
+    return &history.History
 }
 
 func main() {
@@ -165,5 +179,5 @@ func main() {
             PrettyResponse(b)
         }
     }
-
+    // historys().Clear()
 }
