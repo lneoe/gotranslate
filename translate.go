@@ -5,7 +5,7 @@ import (
     "encoding/json"
     "flag"
     "fmt"
-    "gotranslate/history"
+    . "gotranslate/history"
     "io/ioutil"
     "net/http"
     "net/url"
@@ -122,7 +122,8 @@ func PrettyResponse(b []byte) {
         for i := 0; i < len(tr.Sentences); i++ {
             fmt.Printf("[sentences]:\t%s\n", tr.Sentences[i].Trans)
             //添加到history
-            historys().Add(fmt.Sprintf("[%s]:\t[%s]\n", tr.Sentences[i].Orig, tr.Sentences[i].Trans))
+            History.Add(fmt.Sprintf("[%s]:\t[%s]\n", tr.Sentences[i].Orig, tr.Sentences[i].Trans))
+            // historys().Add(fmt.Sprintf("[%s]:\t[%s]\n", tr.Sentences[i].Orig, tr.Sentences[i].Trans))
         }
     }
 
@@ -137,10 +138,12 @@ func PrettyResponse(b []byte) {
         }
         //添加到history
         if i == 0 {
-            historys().Add(fmt.Sprintf("[%s]:\t%s\n", d.Base_form, d.Terms))
+            History.Add(fmt.Sprintf("[%s]:\t%s\n", d.Base_form, d.Terms))
+            // historys().Add(fmt.Sprintf("[%s]:\t%s\n", d.Base_form, d.Terms))
         } else {
             //第二行开始 不显示源单词
-            historys().Add(fmt.Sprintf("\t%s\n", d.Terms))
+            History.Add(fmt.Sprintf("\t\t%s\n", d.Terms))
+            // historys().Add(fmt.Sprintf("\t%s\n", d.Terms))
         }
     }
     if tr.Spell.Spell_res != "" {
@@ -149,9 +152,9 @@ func PrettyResponse(b []byte) {
 
 }
 
-func historys() *history.HistoryFile {
-    return &history.History
-}
+// func historys() *history.HistoryFile {
+//     return &history.History
+// }
 
 func main() {
     var sl, tl string
